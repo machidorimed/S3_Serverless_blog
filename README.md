@@ -1,6 +1,6 @@
 <img width="5464" height="3640" alt="S3　+ CloudFront(OAC)によるサーバーレス技術ブログ" src="https://github.com/user-attachments/assets/723069a3-2c80-4156-88c4-b659de4adfcd" />
 
-## S3　+ CloudFront(OAC)によるサーバーレス技術ブログ
+## S3 + CloudFront(OAC)によるサーバーレス技術ブログ
 
 ---
 
