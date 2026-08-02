@@ -1,7 +1,7 @@
 name: Terraform CI/CD
 
 on:
-    # WordPress配下の .tf もしくはこのワークフローファイル変更時のみ。
+    # WordPress配下の .tf もしくはこのワークフローファイル変更時だけ。
     pull_request:
         branches: [main]
         paths:
