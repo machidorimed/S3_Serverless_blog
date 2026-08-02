@@ -1,3 +1,5 @@
+<img width="5464" height="3640" alt="S3　+ CloudFront(OAC)によるサーバーレス技術ブログ" src="https://github.com/user-attachments/assets/723069a3-2c80-4156-88c4-b659de4adfcd" />
+
 ## S3　+ CloudFront(OAC)によるサーバーレス技術ブログ
 
 ---
@@ -22,7 +24,8 @@ https://www.zerocla.com
 
 このブログでは、公開環境としてAmazon S3とCloudFrontを利用しています。料金は**保存容量やデータ転送量、リクエスト数に応じた従量課金制**で、個人ブログ程度のアクセスであれば、月数十〜数百円程度で運用できるケースもあります。また、SSL証明書にはACMを利用しているため、追加費用はかかりません。
 
-###　高いセキュリティ
+### 高いセキュリティ
+
 一般的なWordPressサイトでは、プラグインやテーマの脆弱性を狙った攻撃、PHPの実行を狙った不正アクセス、データベースへの攻撃（SQLインジェクションなど）といったリスクへの対策が常に必要になります。
 
 一方、このブログの公開環境では、**PHPやデータベースが動作していません。**
@@ -73,6 +76,8 @@ S3は高い耐久性と複数のAZからなる可用性があり、アクセス�
 - GitHub Actions ⇔ EC2: SSM Session Manager(SSHキーペア不要)
 
 ## インフラ構成図
+<img width="1295" height="674" alt="名称未設定のデザイン (2)" src="https://github.com/user-attachments/assets/b09459b2-9be1-4e8a-8a44-60c5e44718c0" />
+
 
 ## 全体構成
 
