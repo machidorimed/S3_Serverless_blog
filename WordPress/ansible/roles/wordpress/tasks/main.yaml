@@ -61,23 +61,39 @@
       group: apache
       mode: "0755"
 
-# Cocoon 親テーマを配置
-- name: Copy Cocoon parent theme
-  copy:
-      src: "{{ playbook_dir }}/../themes/cocoon-master/"
-      dest: "{{ wordpress_install_dir }}/wp-content/themes/cocoon-master/"
-      owner: apache
-      group: apache
-      mode: "0755"
+# テーマはファイル数が多く SSM 経由の1ファイルずつの転送だと非常に遅いため、
+# 制御ノード側で tar にまとめてから1ファイルとして転送し、リモートで展開する
+- name: Archive Cocoon parent theme
+  delegate_to: localhost
+  become: false
+  command: tar czf /tmp/cocoon-master.tar.gz -C "{{ playbook_dir }}/../themes" cocoon-master
 
-# Cocoon 子テーマを配置
-- name: Copy Cocoon child theme
+- name: Archive Cocoon child theme
+  delegate_to: localhost
+  become: false
+  command: tar czf /tmp/cocoon-child.tar.gz -C "{{ playbook_dir }}/../themes" cocoon-child
+
+- name: Copy Cocoon parent theme archive to remote
   copy:
-      src: "{{ playbook_dir }}/../themes/cocoon-child/"
-      dest: "{{ wordpress_install_dir }}/wp-content/themes/cocoon-child/"
-      owner: apache
-      group: apache
-      mode: "0755"
+      src: /tmp/cocoon-master.tar.gz
+      dest: /tmp/cocoon-master.tar.gz
+
+- name: Copy Cocoon child theme archive to remote
+  copy:
+      src: /tmp/cocoon-child.tar.gz
+      dest: /tmp/cocoon-child.tar.gz
+
+- name: Extract Cocoon parent theme
+  unarchive:
+      src: /tmp/cocoon-master.tar.gz
+      dest: "{{ wordpress_install_dir }}/wp-content/themes/"
+      remote_src: yes
+
+- name: Extract Cocoon child theme
+  unarchive:
+      src: /tmp/cocoon-child.tar.gz
+      dest: "{{ wordpress_install_dir }}/wp-content/themes/"
+      remote_src: yes
 
 # ファイル群を Apache から実行
 - name: Set permissions and ownership for WordPress
