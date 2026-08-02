@@ -53,7 +53,15 @@
         name: pymysql
         executable: pip3
     
-    # rootユーザーのパスワードリセット
+    # すでに root パスワードが設定済みかどうかを確認(再実行時に一時パスワードが無効なため)
+    - name: Check if MySQL root password is already set
+      ansible.builtin.command: mysql --user=root --password='{{ mysql_root_password }}' -e "SELECT 1;"
+      register: mysql_root_check
+      ignore_errors: true
+      changed_when: false
+      no_log: true
+
+    # rootユーザーのパスワードリセット (初回のみ)
     - name: update expire root user password
       ansible.builtin.shell: >
         mysql
@@ -62,6 +70,7 @@
         --connect-expired-password
         -e "ALTER USER 'root'@'localhost'
         IDENTIFIED BY '{{ mysql_root_password }}';"
+      when: mysql_root_check.rc != 0
     
     # anonymous ユーザー消去
     - name: Remove anonymous MySQL users
