@@ -1,0 +1,11 @@
+    # 設定ファイル変更時のみ PHP-FPM リスタート
+    - name: Restart PHP-FPM
+      systemd:
+        name: php-fpm
+        state: restarted
+    
+    # 設定ファイル変更時のみ Apache リスタート
+    - name: Restart Apache
+      systemd:
+        name: httpd
+        state: restarted

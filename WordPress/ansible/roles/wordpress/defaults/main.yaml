@@ -1,0 +1,5 @@
+# MySQL configuration
+wordpress_install_dir: /var/www/html
+wordpress_db_name: wp_db
+wordpress_db_user: wp-user
+wordpress_db_password: "48694062Sg%"

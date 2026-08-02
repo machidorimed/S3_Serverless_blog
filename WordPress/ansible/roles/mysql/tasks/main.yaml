@@ -1,0 +1,117 @@
+    # MySQL 公式レポジトリからダウンロード
+    - name: Download MySQL community release RPM directly
+      ansible.builtin.get_url:
+        url: https://repo.mysql.com//mysql80-community-release-el9-5.noarch.rpm
+        dest: /tmp/mysql80-community-release-el9.rpm
+
+    # GPG キーペアインストール
+    - name: Import MySQL GPG key
+      ansible.builtin.rpm_key:
+        key: https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
+        state: present
+
+    # レポジトリから MySQL インストール
+    - name: Install MySQL community repo from downloaded RPM 
+      ansible.builtin.dnf:
+        name: /tmp/mysql80-community-release-el9.rpm 
+        state: present
+
+    # MySQL サーバーインストール 
+    - name: Install MySQL server
+      ansible.builtin.dnf:
+        name: mysql-community-server
+        state: present
+
+    # MySQL 自動起動
+    - name: Start and enable MySQL service
+      systemd:
+        name: mysqld
+        state: started
+        enabled: yes
+
+    # パスワード一時登録
+    - name: Get temporary MySQL root password
+      ansible.builtin.shell: |
+        grep 'temporary password' /var/log/mysqld.log | awk '{print $NF}'
+      register: mysql_temp_pass
+      changed_when: false
+
+    # pip コマンドインストール
+    - name: Ensure python3-pip is installed
+      ansible.builtin.dnf:
+        name: python3-pip
+        state: present
+    
+    # パッケージとPyMySQL インストール
+    - name: Install cryptography package
+      pip:
+        name: cryptography
+        executable: pip3
+     
+    - name: Install PyMySQL via pip
+      pip:
+        name: pymysql
+        executable: pip3
+    
+    # rootユーザーのパスワードリセット
+    - name: update expire root user password
+      ansible.builtin.shell: >
+        mysql
+        --user=root
+        --password='{{ mysql_temp_pass.stdout }}'
+        --connect-expired-password
+        -e "ALTER USER 'root'@'localhost'
+        IDENTIFIED BY '{{ mysql_root_password }}';"
+    
+    # anonymous ユーザー消去
+    - name: Remove anonymous MySQL users
+      community.mysql.mysql_user: 
+        name: ''
+        host_all: true 
+        state: absent
+        login_user: root 
+        login_password: "{{ mysql_root_password }}"
+        check_implicit_admin: true 
+
+    # test データベース削除
+    - name: Remove test database
+      community.mysql.mysql_db: 
+        name: test 
+        state: absent
+        login_user: root 
+        login_password: "{{ mysql_root_password }}"
+        check_implicit_admin: true 
+
+    # WordPress データベース作成
+    - name: Create WordPress database
+      community.mysql.mysql_db: 
+        name: "{{ wordpress_db_name }}"
+        state: present
+        login_user: root 
+        login_password: "{{ mysql_root_password }}"
+        check_implicit_admin: true 
+
+    # WordPress ユーザー作成
+    - name: Create WordPress database user 
+      community.mysql.mysql_user: 
+        name: "{{ wordpress_db_user }}"
+        password: "{{ wordpress_db_password }}"
+        priv: "{{ wordpress_db_name }}.*:ALL"
+        host: "%"
+        state: present
+        login_user: root 
+        login_password: "{{ mysql_root_password }}"
+        check_implicit_admin: true 
+
+    # スロークエリ出力
+    - name: Ensure Slow query log is configured
+      ansible.builtin.blockinfile:
+        path: "{{ mysql_config_file }}"
+        block: |
+          slow_query_log = 1
+          slow_query_log_file = {{ mysql_slow_query_log_file }}
+          long_query_time = {{ mysql_long_query_time }} 
+        marker: "# {mark} ANSIBLE MANAGED SLOW QUERY LOG CONFIG"
+        insertafter: '[mysqld]'
+      notify: Restart mysqld
+    

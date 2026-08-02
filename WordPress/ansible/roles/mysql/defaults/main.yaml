@@ -1,0 +1,9 @@
+# MySQL configuration
+mysql_root_password: "48694062Sg!"
+mysql_config_file: /etc/my.cnf
+mysql_slow_query_log_file: /var/lib/mysql/mysql-slow.log
+mysql_long_query_time: 1
+
+wordpress_db_name: wp_db
+wordpress_db_user: wp-user
+wordpress_db_password: "48694062Sg%"

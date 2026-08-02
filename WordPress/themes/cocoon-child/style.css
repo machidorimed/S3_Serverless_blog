@@ -1,0 +1,23 @@
+/*
+Theme Name: Cocoon Child (ゼロから始めるCloud学習室)
+Theme URI:
+Description: 「ゼロから始めるCloud学習室」オリジナルトップページデザインを実装したCocoon子テーマ。
+Author:
+Author URI:
+Template: cocoon-master
+Version: 1.0.0
+Text Domain: cocoon-child
+*/
+
+:root {
+  --navy: #101a3d;
+  --blue: #3b6ff0;
+  --blue-light: #eaf1ff;
+  --orange: #f7941e;
+  --bg: #eef2f8;
+  --card: #ffffff;
+  --text-muted: #5b6479;
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --container: 1180px;
+}

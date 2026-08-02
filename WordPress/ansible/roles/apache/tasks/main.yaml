@@ -1,0 +1,35 @@
+    # Apache インストール
+    - name: Install Apache
+      ansible.builtin.dnf:
+        name: 
+          - httpd
+        state: present
+
+    # Apache 自動起動
+    - name: Start and enable Apache
+      systemd:
+        name: httpd
+        state: started
+        enabled: yes
+
+    # SElinux(Linuxセキュリティ) 削除
+    - name: Disable SELinux permanently
+      ansible.builtin.replace: 
+        path: /etc/selinux/config
+        regexp: '^SELINUX=.*'
+        replace: 'SELINUX=disabled'
+    
+    - name: Set SELinux to permissive mode (until reboot)
+      ansible.builtin.command: setenforce 0
+      when: ansible_selinux.status == "enabled"
+      ignore_errors: true
+
+    # Apache バージョン非表示化
+    - name: Set ServerTokens to Prod
+      lineinfile: 
+        path: /etc/httpd/conf/httpd.conf
+        regexp: '^ServerTokens'
+        line: 'ServerTokens Prod'
+        state: present
+        insertafter: EOF
+      notify: Restart Apache
