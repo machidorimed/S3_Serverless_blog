@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(aws ssm *)"
+      "Bash(aws ssm *)",
+      "Bash(terraform state *)",
+      "Bash(aws cloudfront *)"
     ]
   }
 }

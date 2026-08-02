@@ -108,7 +108,7 @@ resource "aws_security_group" "sg" {
 # EC2
 resource "aws_instance" "ec2" {
   ami                    = "ami-070d2b24928913a49" # Amazon Linux 2023 (東京リージョン例)
-  instance_type          = "t3.micro"
+  instance_type          = "t3.small"
   subnet_id              = aws_subnet.public.id
   iam_instance_profile   = aws_iam_instance_profile.ssm_profile.name # セッションマネージャー用IAMロール
   vpc_security_group_ids = [aws_security_group.sg.id]
@@ -118,6 +118,7 @@ resource "aws_instance" "ec2" {
     Project = "zerocla-blog"
   }
 }
+
 
 # Session Manager IAM Role
 resource "aws_iam_role" "ssm_role" {

@@ -26,10 +26,23 @@
 
     # Apache バージョン非表示化
     - name: Set ServerTokens to Prod
-      lineinfile: 
+      lineinfile:
         path: /etc/httpd/conf/httpd.conf
         regexp: '^ServerTokens'
         line: 'ServerTokens Prod'
         state: present
         insertafter: EOF
+      notify: Restart Apache
+
+    # デフォルトの <Directory "/var/www/html"> が AllowOverride None のため
+    # WordPress の .htaccess (パーマリンク/REST API 用の書き換えルール) が無視される問題への対処
+    - name: Allow .htaccess overrides for WordPress document root
+      ansible.builtin.blockinfile:
+        path: /etc/httpd/conf/httpd.conf
+        marker: "# {mark} ANSIBLE MANAGED ALLOWOVERRIDE FOR WORDPRESS"
+        insertafter: EOF
+        block: |
+          <Directory "/var/www/html">
+              AllowOverride All
+          </Directory>
       notify: Restart Apache
