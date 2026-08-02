@@ -1,12 +1,13 @@
     # PHP パッケージインストール
     - name: Install PHP and extensions
       ansible.builtin.dnf:
-        name: 
-          - php 
+        name:
+          - php
           - php-pdo
           - php-mysqlnd
           - php-fpm
           - php-mbstring
+          - php-gd
         state: present
       notify: Restart Apache
 
@@ -30,9 +31,28 @@
     # PHP バージョン非表示化
     - name: Disable expose_php in php.ini
       ansible.builtin.lineinfile:
-        path: /etc/php.ini 
+        path: /etc/php.ini
         regexp: '^;?expose_php\s*='
         line: 'expose_php = off'
+        state: present
+        backup: yes
+      notify: Restart PHP-FPM
+
+    # 画像アップロード上限を引き上げ (デフォルト2Mだとスマホ写真等が弾かれるため)
+    - name: Set upload_max_filesize in php.ini
+      ansible.builtin.lineinfile:
+        path: /etc/php.ini
+        regexp: '^;?upload_max_filesize\s*='
+        line: 'upload_max_filesize = 64M'
+        state: present
+        backup: yes
+      notify: Restart PHP-FPM
+
+    - name: Set post_max_size in php.ini
+      ansible.builtin.lineinfile:
+        path: /etc/php.ini
+        regexp: '^;?post_max_size\s*='
+        line: 'post_max_size = 64M'
         state: present
         backup: yes
       notify: Restart PHP-FPM

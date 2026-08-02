@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<nav class="cl-footer-nav" aria-label="フッターナビゲーション">
 				<a href="<?php echo esc_url( cloudlearning_page_url( 'profile' ) ); ?>">プロフィール</a>
 				<a href="<?php echo esc_url( cloudlearning_page_url( 'privacy-policy' ) ); ?>">プライバシーポリシー</a>
-				<a href="<?php echo esc_url( cloudlearning_page_url( 'tokushoho' ) ); ?>">特定商取引法に基づく表記</a>
+				<a href="<?php echo esc_url( cloudlearning_page_url( 'specified-commercial-transaction-law' ) ); ?>">特定商取引法に基づく表記</a>
 				<a href="<?php echo esc_url( cloudlearning_page_url( 'contact', 'contact' ) ); ?>">お問い合わせ</a>
 			</nav>
 			<span class="cl-copyright">© <?php echo esc_html( gmdate( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?></span>

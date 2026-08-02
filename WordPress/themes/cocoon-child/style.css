@@ -21,3 +21,7 @@ Text Domain: cocoon-child
   --radius-md: 14px;
   --container: 1180px;
 }
+
+.entry-content h2 {
+  margin-top: 2em;
+}
