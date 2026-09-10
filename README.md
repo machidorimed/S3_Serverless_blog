@@ -76,7 +76,7 @@ S3は高い耐久性と複数のAZからなる可用性があり、アクセス�
 - GitHub Actions ⇔ EC2: SSM Session Manager(SSHキーペア不要)
 
 ## インフラ構成図
-<img width="1295" height="674" alt="名称未設定のデザイン (2)" src="https://github.com/user-attachments/assets/b09459b2-9be1-4e8a-8a44-60c5e44718c0" />
+<img width="1052" height="630" alt="スクリーンショット 2026-09-10 12 58 43" src="https://github.com/user-attachments/assets/13afb146-af9b-4c0a-9db5-477ce5bbe1fc" />
 
 
 ## 全体構成
